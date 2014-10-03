@@ -1,0 +1,641 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- 
+<link rel="stylesheet" href="css/text.css" />
+<link rel="stylesheet" href="css/960.css" />
+<link rel="stylesheet" href="css/nivo-slider.css" type="text/css" media="screen" />
+ -->
+<link rel="stylesheet" href="css/text.css" />
+<link rel="stylesheet" href="css/mainStyle.css" />
+<!-- <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'> -->
+<script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
+<!-- <script type="text/javascript" src="scripts/tabs.js"></script>      -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script type="text/javascript" src="scripts/jquery.maphilight.js"></script>
+<script src="http://malsup.github.com/chili-1.7.pack.js"></script>
+<script src="http://malsup.github.io/jquery.blockUI.js"></script>
+
+    <!-- Liye scripts: -->
+<link type="text/css" rel="stylesheet" href="qtip2/jquery.qtip.css" />
+
+<!-- countdown timer code: -->
+<link rel="stylesheet" type="text/css" href="css/jquery.countdown.css"> 
+<script type="text/javascript" src="js/jquery.plugin.js"></script> 
+<script type="text/javascript" src="js/jquery.countdown.js"></script>
+
+<script>
+
+$(document).ready(function() {
+    //Phuong's code for viewing floor plans
+      // global arrays for dorms' properties
+      var dorms = ["ham", "macg", "torrey", "wilder"];
+      var numFloors = [7, 4, 5, 4];
+      var dormHeight = [480, 650, 550, 610];
+      var viewElements = ["building", "entrance", "forest", "lake", "parking", "road", "hospital"];
+      
+      var dormElements = ["lift", "dinning", "access", "park", "thinWall", "quietFloor", "kitchenette", "detail", "view"];
+      
+      // global arrays for each dorm's info
+      var hamElements = ["y", "y", "y", "y", "y", "13", "1234", "y", "y"];
+      var macgElements = ["y", "y", "y", "y", "y", "2", "123", "y", "y"];
+      var torreyElements = ["y", "n", "y", "y", "y", "24", "12345", "y", "y"];
+      var wilderElements = ["y", "y", "y", "n", "n", "34", "123", "y", "y"];
+      
+      // sample database for ham, macg, and torrey and wilder
+      // assume that the order goes like: top right bottom left
+      var macgView = ["parking,road,forest", "null", "null", "lake"];
+      var hamView = ["parking,road,forest", "null", "null", "lake"];
+      var torreyView = ["parking", "null", "hospital", "lake"];
+      var wilderView = ["parking,road", "building", "null", "building"];
+    
+      // handle click event on halls here
+      var photoNum = 0;
+      var floorName = "";
+      var counter = 0;
+      var dormEle = [""]; 
+      var currentView = [""];
+      var viewOn = false;
+	
+	var dataOld;
+	var height = Math.max($(window).height(), $(document).height());
+	var width = Math.max($(window).width(), $(document).width());
+	$('#shadow').width(width);
+	$('#shadow').height(height);
+	$('#container').width(width);
+	
+	$('#submit').attr('disabled','disabled');
+			
+	$(window).resize(function() {
+		var height = Math.max($(window).height(), $(document).height());
+		var width = Math.max($(window).width(), $(document).width());
+
+		$('#shadow').width(width);
+		$('#shadow').height(height);
+		$('#container').width(width);
+	});
+	
+	  $('#help').click(function() {
+	 $.blockUI.defaults.overlayCSS.cursor = 'default';
+	 $.blockUI.defaults.overlayCSS.opacity = 0.4;
+	 $.blockUI.defaults.css.top = $(window).height()*0.2;
+	 $.blockUI.defaults.css.left = ($(window).width()-500)/2;
+	 $.blockUI({
+	   blockMsgClass: 'alertBox',
+			   message: '<h2> Having trouble?</h2> <p align="left"> <b> Instruction: </b> Please use the map to discover the Dorms and their floor plans. Also, when your registration time arrives, the submit button will be enabled. Please fill in all the fields before pushing submit! </p> <p align="left"> <br> For further information please contact: </p> <p align="left"> <b> Office of Residentail Services </b> <br> Ground level Safford Hall <br> Mount Holyoke College <br> 50 College Street <br> South Hadley, MA 01075 <br> Phone 413-538-2088 <br> <br> or email: <b> reslife@mtholyoke.edu </b> </p>'
+	 });
+	 $('.blockOverlay').click(function(){
+		 $.unblockUI(),
+		 $('#help').blur()
+	 })
+	});
+
+    viewOn = false;
+	$('#floorPlan').hide();
+    $('.map').maphilight();
+
+    
+  $('#torrey, #ham, #macg, #wilder').click(function() {
+       
+       //clear view mode
+       $('#floorImg').width(1000);
+       $('#floorImg').height(dormHeight[dorms.indexOf(this.id)]);
+       $('#0').empty();
+       $('#1').empty();
+       $('#2').empty();
+       $('#3').empty();
+       
+       counter = 0;
+       photoNum = numFloors[dorms.indexOf(this.id)];
+       floorName = this.id;
+       $('.map').hide();
+       $.blockUI.defaults.css.top = $(window).height()*0.01;
+       $.blockUI.defaults.css.left = ($(window).width()-1200)/2;
+       
+       $('#floorImg').attr("height", dormHeight[dorms.indexOf(this.id)] + "px");
+       $('#floorImg').attr("src","img/floors/" + this.id + "0.jpg");
+       
+       // specify the top position of the info box
+       var top = dormHeight[dorms.indexOf(this.id)];
+       if (top > 600){
+       top = top - 60;
+       }
+       $('.lowerOverlay').css('top', top.toString() + 'px' );
+       
+       
+       // load symbols here
+       switch(this.id){
+       case "torrey":
+       console.log("TORREYYYY");
+       dormEle = torreyElements;
+       currentView = torreyView;
+       break;
+       case "ham":
+       dormEle = hamElements;
+       currentView = hamView;
+       break;
+       case "macg":
+       dormEle = macgElements;
+       currentView = macgView;
+       break;
+       case "wilder":
+       dormEle = wilderElements;
+       currentView = wilderView;
+       break;
+       default:
+       break
+       }
+       
+       for (var i = 0; i < 9; i++) {
+       $('#' + dormElements[i]).attr("src","");
+       if(dormEle[i] == "y"){
+       $('#' + dormElements[i]).attr("src","img/buttons/" + dormElements[i] + ".png");
+       }
+       if (i == 5 || i == 6){
+       if (dormEle[i].split("").indexOf((counter%photoNum).toString()) > -1 ){
+       $('#' + dormElements[i]).attr("src","img/buttons/" + dormElements[i] + ".png");
+       }
+       } 
+       }
+       
+        $.blockUI.defaults.overlayCSS.cursor = 'default';
+       $.blockUI({ 
+                 blockMsgClass: 'floor',
+                 message: $('#floorPlan')
+                 }); 
+       
+       $('.blockOverlay').attr('title', 'Click to go back').click( function(){
+                                                                  $.unblockUI();
+                                                                  $('.map').show();
+                                                                  });
+       
+       }); 
+  
+  // check quiet floors and kitchenettes on each floor
+  function checkQuietFloorKitchen (count, num){
+  if (dormEle[5].split("").indexOf((count%num).toString()) > -1 ){
+  $('#' + dormElements[5]).attr("src","img/buttons/" + dormElements[5] + ".png");
+  }else{
+  $('#' + dormElements[5]).attr("src","");
+  }
+  if (dormEle[6].split("").indexOf((count%num).toString()) > -1 ){
+  $('#' + dormElements[6]).attr("src","img/buttons/" + dormElements[6] + ".png");
+  }else{
+  $('#' + dormElements[6]).attr("src","");
+  }
+  }
+  
+  // handle next and previous buttons on floor plans here
+  $('#nextBtn').click(function() {   	
+                      counter++;
+                      $('#floorImg').attr("src","img/floors/" + floorName + counter%photoNum + ".jpg");
+                      checkQuietFloorKitchen(counter, photoNum);
+                      
+                      });
+  
+  $('#prevBtn').click(function() { 
+                      if (counter > 0){
+                      counter--;
+                      $('#floorImg').attr("src","img/floors/" + floorName + counter%photoNum + ".jpg");
+                      checkQuietFloorKitchen(counter, photoNum);
+                      }
+                      
+                      });
+  
+  $('#nextBtn, #prevBtn').mouseover(function(e) {
+                                    $(this).attr("src","img/" + this.id + "SmallHover.png");
+                                    }).mouseout(function(e){
+                                                $(this).attr("src","img/" + this.id + "Small.png");
+                                                });
+  
+  // when view is clicked, user can see the surroundings of the dorm
+    $('#view').click(function(e) {
+   if (viewOn == false){
+   // scale floor plan photo
+   $('#floorImg').width(700);
+   var newHeight = 700*dormHeight[dorms.indexOf(floorName)]/1000;
+   $('#floorImg').height(newHeight);
+   
+   // load elements
+   for (var i = 0; i < currentView.length; i++){
+   var toLoad = currentView[i].split(",");
+   for (var j = 0; j < toLoad.length; j++){
+   if (toLoad[j] != "null"){
+   $('#' + i).append("<img width='150px' height='150px' src='img/icons/" + toLoad[j] + ".png'/>" );
+   }
+   }
+   }
+   viewOn = true;
+   }else{
+   for (var k = 0; k < 4; k++){
+   console.log("id: " + ('#' + i));
+   $('#' + k).empty();
+   } 
+   $('#floorImg').width(1000);
+   $('#floorImg').height(dormHeight[dorms.indexOf(floorName)]);
+   viewOn = false;
+   }
+   });
+  
+  // when details is clicked, open info page
+  $('#detail').click(function(e) {
+     var link = "https://www.mtholyoke.edu/reslife/" + floorName + "-hall";
+     if (floorName == "macg"){
+     link = "https://www.mtholyoke.edu/reslife/macgregor-hall";
+     }
+     $('#detailLink').attr('href', link);
+ });
+    
+                  
+    //Monica's code for choosing functions and layout
+    $('#time').countdown({
+//     	until: new Date(2014, 4 - 1, 30),
+    	until: '+100s',
+    	expiryText: '<div class="over" style="font-family: Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; font-weight: 100; line-height: 25px; font-size: 25px; margin-top: 8px; color: #FFFFFF;">You can now register!</div>',
+    	onExpiry: liftOff
+    });
+    
+    function liftOff() { 
+    	console.log('We have lift off!');
+    	$('#submit').removeAttr('disabled');
+	}
+    
+    $('#halls').change(function(e) {
+  		e.preventDefault();
+  		if(dataOld != null){
+    		dataOld.alwaysOn = false;
+    	}
+		var data = $('#' + $('#halls').val()).mouseout().data('maphilight') || {};
+		data.alwaysOn = !data.alwaysOn;
+		$('#' + $('#halls').val()).data('maphilight', data).trigger('alwaysOn.maphilight');
+		dataOld = data;
+	});
+	
+	$('#floor').change(function() {
+		$('#room').empty();
+		$('#room').append('<option selected disabled>Choose one Room</option>');
+  		var floor = $('#floor').val();
+  		for ( var i = 1; i <= 20; i++ ) {
+  			var temp;
+  			if(i>=10){
+  				temp = floor + '' + i;
+  			}else{
+  				temp = floor + '0' + i;
+  			}
+			$('#room').append('<option value=' + i + '>' + temp + '</option>');
+		}
+	});
+    
+    $('#submit').click(function() {
+        var checked = $('#double').is(':checked') || $('#single').is(':checked');
+		var messageBlock;
+    	if(($('#halls').val() == null) || !checked || ($('#floor').val() == null) || ($('#room').val() == null)){
+    		console.log(checked);
+    		messageBlock = '<h2> <br> <br> <br> Please fill out <b> all </b> fields before submitting!</h2>';
+    	}
+    	else{
+    		var roomType;
+    		if($('#double').is(':checked')){
+    			roomType = 'Double';
+    		} else{
+    			roomType = 'Single';
+    		}
+    		messageBlock = '<h2> Congratulations! <br> <br> You have a home for next year!</h2> <br> <p align="center"> You will live at: <br> <br> <b> Dorm / Hall: '
+				   + $('#halls option:selected').text() + '<br> Room Type: ' + roomType + 
+				   '<br> Floor: ' + $('#floor option:selected').text() + '<br> Room Number: ' + $('#room option:selected').text() + 
+				   '</p> <br> <br> <p align="center"> See you next year!';
+    	}
+    	$('input[name=room]:checked', '#hallForm').val()
+		 $.blockUI.defaults.overlayCSS.cursor = 'default';
+		 $.blockUI.defaults.overlayCSS.opacity = 0.4;
+		 $.blockUI.defaults.css.top = $(window).height()*0.2;
+		 $.blockUI.defaults.css.left = ($(window).width()-500)/2;
+		 $.blockUI({
+		   blockMsgClass: 'alertBox',
+				   message: messageBlock
+		 });
+		 $('.blockOverlay').click(function(){
+			 $.unblockUI(),
+			 $('#submit').blur()
+		 })
+    });
+          
+});
+
+</script>
+
+<div class="shadow" id="shadow">
+
+<title>MHC Housing App</title>
+<style type="text/css">
+.tab-center {
+	margin-left:auto;
+	margin-right:auto;
+	alignment-adjust:central;
+}
+.center {
+	text-align: auto;
+	alignment-adjust:central;
+}
+body {
+	margin-left: auto;
+	margin-right: auto;
+	alignment-adjust:central;
+}
+a:link {
+	text-decoration: none;
+	color: #0266AC;
+}
+a:visited {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: none;
+	color: #fff !important;
+}
+a:active {
+	text-decoration: none;
+}
+</style>
+
+
+</head>
+
+<body>
+    
+    <script type="text/javascript" src="qtip2/jquery.qtip.js"></script>
+	<script type="text/javascript" src="qtip2/jquery.imagesloaded.pkg.min.js"></script>
+	
+    
+	<script type="text/javascript">$(document).ready(function() {
+                                                    
+     //Liye's code for veiwing the hover popup window of dorms
+     $('area').each(function(){
+                    $(this).qtip(
+                                 {
+                                 content: {
+                                 /*
+                                  text: '<img src="' + $(this).attr('alt') +'"/> <p> Singles : 50</p><p> Avaiable doubles : 50</p> <p> Dining Hall : Yes </p>',*/
+                                 
+                                 text: '<img src="' + $(this).attr('alt') +'"/> <p></p> <img src="img/progress.jpg"> ',
+                                 title: $(this).attr('title'), // Use the ALT attribute of the area map
+                                 
+                                 },
+                                 style: {
+                                 classes: 'qtip-light qtip-shadow',
+                                 border: {
+                                 width: 0, 
+                                 radius: 4 
+                                 }, 
+                                 tip: true // Apply a tip at the default tooltip corner
+                                 }
+                                 });
+                    
+                    
+                    
+                    });
+     
+     
+     
+     $('.map').maphilight({
+                          fill: true,
+                          fillColor: '00000',
+                          fillOpacity: 0.3,
+                          stroke: false,
+                          strokeColor: '8098b5',
+                          strokeOpacity: 1,
+                          strokeWidth: 1,
+                          fade: true,
+                          alwaysOn: false
+                          
+                          });
+                                                     });
+        </script>
+
+<div class="logOut" align="right">
+	<section id="content" align="right">
+		<form action="file://localhost/Users/monica_chelliah/Desktop/Login.html">
+			<div align="right">
+				<input type="submit" value="Sign out" />
+				<input type="button" id="help" value="Help!" />
+			</div>
+		</form><!-- form -->
+	</section><!-- content -->
+</div><!-- container -->
+
+<div class="container" id="container" align="center">
+	<h1>MHC Housing Lottery.</h1>
+</div><!-- container -->
+
+<div align="center" class="campusMap" id="campusMap">
+    <img src="img/campusMapNoLogo.jpg" alt="ADFDFG" class = "map" usemap="#simple" id="campusMap"/>
+
+    <map name="simple">
+		<area id="torrey" href="#" shape="circle" coords="284,251,35" alt="img/torrey.jpg" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="Torrey">
+		<area id="ham" href="#" shape="circle" coords="317,131,30" alt="img/ham.jpg" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="Ham">
+            
+		<area id="macg" href="#" shape="circle" coords="354,121,30" alt="img/macgregor.jpg" data-maphilight='{"stroke":false,"fillColor":"0099CC","fillOpacity":0.6}' title="McGregor">
+            
+		<area id="prospect" href="#" shape="circle" coords="523,181,30" alt="img/prospect.jpg" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="Prospect">
+            
+		<area id="1837" href="#" shape="circle" coords="697,142,35" alt="1837" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="1837">
+		<area id="n-mandelle" href="#" shape="circle" coords="784,143,30" alt="n-mandelle" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="North Mandelle">
+		<area id="s-mandelle" href="#" shape="circle" coords="821,146,30" alt="s-mandelle" data-maphilight='{"stroke":false,"fillColor":"0099CC","fillOpacity":0.6}' title="South Mandelle">
+
+		<area id="n-newDorm" href="#" shape="circle" coords="834,262,30" alt="n-newDorm" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="North Creighton">
+		<area id="s-newDorm" href="#" shape="circle" coords="871,260,30" alt="s-newDorm" data-maphilight='{"stroke":false,"fillColor":"0099CC","fillOpacity":0.6}' title="South Creighton">
+
+		<area id="n-rocky" href="#" shape="circle" coords="721,373,30" alt="n-rocky" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="North Rocky">
+		<area id="s-rocky" href="#" shape="circle" coords="753,375,30" alt="s-rocky" data-maphilight='{"stroke":false,"fillColor":"0099CC","fillOpacity":0.6}' title="South Rocky">
+	
+		<area id="abbey" href="#" shape="circle" coords="905,372,30" alt="abbey" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="Abbey">
+		<area id="buckland" href="#" shape="circle" coords="857,326,30" alt="buckland" data-maphilight='{"stroke":false,"fillColor":"0099CC","fillOpacity":0.6}' title="Buckland">
+		
+		<area id="mead" href="#" shape="circle" coords="765,313,30" alt="mead" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="Mead">
+		<area id="wilder" href="#" shape="circle" coords="698,311,30" alt="wilder" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="Wilder">
+
+		<area id="brigham" href="#" shape="circle" coords="597,384,35" alt="brigham" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="Brigham">
+		
+		<area id="safford" href="#" shape="circle" coords="582,346,30" alt="safford" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="Safford">
+
+		<area id="porter" href="#" shape="circle" coords="569,293,30" alt="img/porter.jpg" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="Porter">
+		<area id="dickinson" href="#" shape="circle" coords="878,509,30" alt="dickinson" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="Dickinson">
+		<area id="pearsons" href="#" shape="circle" coords="452,472,30" alt="pearsons" data-maphilight='{"stroke":false,"fillColor":"ff0000","fillOpacity":0.6}' title="Pearsons">
+
+	</map>
+
+	
+	
+
+</div>
+
+<script>
+
+	var d_canvas = document.getElementById('canvas');
+    var context = d_canvas.getContext('2d');
+    context.fillStyle = "rgba(0, 0, 200, 0.5)";
+//     var background = document.getElementById('campusMap');
+//     var ballon = document.getElementById('ballon')
+//     context.drawImage(background, 0, 0);
+	context.fillRect(0, 0, 100, 100);
+
+</script>
+
+
+<div class="chooseExplanation" align="center" style="display: none;">
+  <h2>
+  <span style="font-size: 24px" align="center">Do your <a id="squidheadlink" href="#">choosing here</a></span>
+  </h2>
+</div>
+
+<div class="userBox" align="center"> <!-- userBox -->
+
+<div class="infoBox" align="center"> <!-- infoBox -->
+	<p class="infoBox-p" align="left"> <b> Time till registration: </b> </p>
+	<div class="time" id="time" align="center"> <!-- time -->
+	</div> <!-- time close -->
+	<p> </p>
+	<p align="left"> <b> Name: </b> &nbsp mhcGuestUser</p>
+	<p align="left"> <b> Class Year: </b> &nbsp 2014</p>
+	<p align="left"> <b> Moving Group: </b> &nbsp None</p>
+	<p align="left"> <b> Eligible for Single?: </b> &nbsp Yes!</p>
+
+</div> <!-- infoBox close -->
+
+<div class="choosingBox" align="center"> <!-- choosingBox -->
+	<p align="left" class="choose-p"> <b> Do your choosing here: </b> </p>
+		<form class="hallForm" align="left">
+			<label class="form-p" align="left"> <b> Dorm / Hall: </b> </label>
+			<select id="halls" align="left">
+			  <option selected disabled value="null">Choose one Dorm / Hall</option>
+			  <option value="1837">1837</option>
+			  <option value="abbey">Abbey</option>
+			  <option value="brigham">Brigham</option>
+			  <option value="buckland">Buckland</option>
+			  <option value="n-newDorm">North Creighton</option>
+			  <option value="s-newDorm">South Creighton</option>
+			  <option value="dickinson">Dickinson</option>
+			  <option value="ham">Ham</option>
+			  <option value="macg">MacGregor</option>
+			  <option value="n-mandelle">North Mandelle</option>
+			  <option value="s-mandelle">South Mandelle</option>
+			  <option value="mead">Mead</option>
+			  <option value="pearsons">Pearsons</option>
+			  <option value="porter">Porter</option>
+			  <option value="prospect">Prospect</option>
+			  <option value="n-rocky">North Rockefeller</option>
+			  <option value="s-rocky">South Rockefeller</option>
+			  <option value="safford">Safford</option>
+			  <option value="torrey">Torrey</option>
+			  <option value="wilder">Wilder</option>
+			</select>
+			<label class="form-p" align="left" style="margin-left: 50px;"> <b> Room Type: </b> </label>
+			<input type="radio" id="double" name="room" value="Double" align="left"><b>Double</b>
+			<input type="radio" id="single" name="room" value="Single" align="left" left="40px"><b>Single</b><br>
+			
+			<div style="margin-top: 20px;">
+			
+			</div>
+			<label class="form-p" align="left"> <b> Floor: </b> </label>
+			<select id="floor" align="left">
+			  <option selected disabled value="null">Choose one Floor</option>
+			  <option value="B">Basement</option>
+			  <option value="1">First</option>
+			  <option value="2">Second</option>
+			  <option value="3">Third</option>
+			  <option value="4">Fourth</option>
+			  <option value="5">Fifth</option>
+			</select>
+			
+			<label class="form-p" align="left" style="margin-left: 87px;"> <b> Room: </b> </label>
+			<select id="room" align="left">
+			  <option selected disabled value="null">Choose one Room</option>
+			</select> <br>
+			<p class="choose-p" align="left"> <br> <b> If you are sure of your selection, then click submit. Remember you cannot change your option once you have clicked submit! </b></p>
+			<input type="button" value="Submit" id="submit" align="center">
+		</form>
+
+</div> <!-- choosingBox close -->
+
+</div> <!-- userBox close -->
+
+<div class="line" align="center"> <img src="img/08.png" alt="" /></div>
+
+<div class="footer" align="center">
+<span class="navfoot">
+<a target="_blank" href=""></a>
+</span>
+  	<div class="footimg" align="center"><img src="img/24.png" alt="" align="center" /></div>
+	<div class="navfoot"><a href="http://www.mtholyoke.edu/index.html"> <p class="footer-p">MOUNT HOLYOKE</p></a>
+	<p class="footer-p"> | </p>
+	<a target="_blank" href="https://www.mtholyoke.edu/reslife"> <p class="footer-p">RES LIFE</p></a>
+	<p class="footer-p"> | </p>
+	<a target="_blank" href="https://www.mtholyoke.edu/reslife/lottery"> <p class="footer-p">HOUSING LOTTERY</p></a>
+	</div>
+	<div class="vlinks"> <p class="footer-p"> Web design by Monica, Phuong, and Liye </p></div>
+</div>
+
+
+    <div id="floorPlan" style="display: none;">
+        <div class="upperOverlay">
+            <div class="sideOverlay" >
+                <img border="0" src="img/prevBtnSmall.png" align="center" id="prevBtn" alt="a"/>
+            </div>
+            <div class="middleOverlay" align="center">
+                <!-- <img align="center" id="floorImg" width ="1000px" alt="floor photo here"/> -->
+                <table class="viewContainer" align="center" border="0">
+                    <tr>
+                        <td></td>
+                        <td>
+                            <table class="topBottomVewRow" >
+                                <tr id="0">
+                                </tr>
+                            </table>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td id="3" width="150px"></td>
+                        <td><img class="mainFloor" align="center" id="floorImg" width ="1000px"/></td>
+                        <td id="1" width="150px"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <table class="topBottomVewRow" >
+                                <tr id="2" >
+                                </tr>
+                            </table>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="sideOverlay">
+                <img border="0" src="img/nextBtnSmall.png" align="center" id="nextBtn" alt="a"/>
+            </div>
+        </div>
+        <div class="lowerOverlay">
+            <table align="center" border="0">
+                <tr>
+                    <td style="width:10%"><img  id="lift"></td>
+                    <td style="width:10%"><img  id="dinning"></td>
+                    <td style="width:10%"><img  id="access"></td>
+                    <td style="width:10%"><img  id="park"></td>
+                    <td style="width:10%"><img  id="thinWall"></td>
+                    <td style="width:10%"><img  id="quietFloor"></td>
+                    <td style="width:10%"><img  id="kitchenette"></td>
+                    <td style="width:10%"><a id="detailLink" href="" target="_blank"/a?><img  id="detail"></td>
+                    <td style="width:10%"><img  id="view" style="cursor: pointer"></td>
+                </tr>
+            </table>
+            
+        </div>
+        
+    </div>
+
+</body>
+
+</div>
+</html>

@@ -1,0 +1,308 @@
+/*CSS file*/
+
+.shadow {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+/* 
+	-webkit-box-shadow: inset 0px 0px 50px #D8D8D8;
+	box-shadow: inset 0px 0px 20px #D8D8D8;
+ */
+}
+
+.alertBox
+{
+    border-width: 1px !important;
+    border-color: #fff !important;
+    box-shadow: 0 0 10px #719ECE !important;
+    background-color: white !important;
+    color: #fff !important;
+    cursor: default !important;
+    width: 500px !important;
+    height: 350px !important;
+
+/*     opacity: 0.8 !important; */
+}
+
+
+body
+{
+    background-color: white;
+    margin:0 auto 0 auto;
+    width: auto;
+    height: auto;
+    padding:0;
+}
+
+.container
+{
+    height: 60px;
+    width: 100%;
+    margin: 1% 0 0 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+/*     padding: 5px; */
+/*     background-color: #CEECF5; */
+    opacity: 1;
+    outline: none !important;
+    border-width: 1px;
+    border-color: #58D3F7;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+.map 
+{
+/* 
+    height: 370px;
+    width: 380px;
+ */
+    margin: 2% auto 2% auto;
+    padding: 10px; 
+/*     border: solid 1px #EFEFEF; */
+    border: solid 10px #FFFFFF; 
+	-moz-box-shadow: 2px 2px 10px #999; 
+	-webkit-box-shadow: 2px 2px 10px #999; 
+	box-shadow: 2px 2px 10px #999; 
+}
+
+
+.userBox {
+	overflow:hidden;
+	width: 1008px;
+    margin: 0 auto;
+}
+
+
+.infoBox {
+	float: left;
+    height: 200px;
+    width: 380px;
+    margin: 0 auto 5% 2px;
+    padding: 10px; 
+    border: solid 5px #FFFFFF; 
+	-moz-box-shadow: 1px 1px 5px #999; 
+	-webkit-box-shadow: 1px 1px 5px #999; 
+	box-shadow: 1px 1px 5px #999;
+/* 	background-color: #69D2E7; */
+/* 	background-color: #8BEA00; */
+	background-color: rgb(81,190,250);
+/* 	background-color: #00BFFF; */
+	opacity: 0.8;
+/* 
+	-webkit-box-shadow: inset 0px 0px 50px #8BEA00;
+	box-shadow: inset 0px 0px 20px #8BEA00;
+ */
+}
+
+.infoBox p {
+	font-family: Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 100;
+    line-height: 14px;
+    font-size: 14px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #FFFFFF;
+}
+
+.time {
+	width: 100%;
+	height: 50px;
+	padding: 10px;
+	position: relative;
+	left: -10px;
+	outline: none !important;
+    border-width: 1px;
+    border-color: #999;
+	background-color: #FFFFFF;
+	opacity: 1;
+}
+
+.choosingBox {
+	float: left;
+    height: 200px;
+    width: 547px;
+    margin: 0 auto 5% 1.5%;
+    padding: 10px; 
+    border: solid 5px #FFFFFF; 
+	-moz-box-shadow: 1px 1px 5px #999; 
+	-webkit-box-shadow: 1px 1px 5px #999; 
+	box-shadow: 1px 1px 5px #999;
+/* 	background-color: #FA6900; */
+/* 	background-color: #FF7900; */
+/* 	background-color: rgb(255, 174, 105); */
+	background-color: #96D01F;
+/* 
+	-webkit-box-shadow: inset 0px 0px 50px #FF7900;
+	box-shadow: inset 0px 0px 20px #FF7900;
+ */
+	opacity: 0.8;
+}
+
+.choose-p {
+	font-family: Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 100;
+    line-height: 14px;
+    font-size: 14px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #FFFFFF;
+}
+
+.choosingBox form {
+	font-family: Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 100;
+    line-height: 14px;
+    font-size: 14px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #FFFFFF;
+}
+
+.form-p {
+	font-family: Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 100;
+    line-height: 14px;
+    font-size: 14px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    color: #FFFFFF;
+}
+
+.chooseExplanation{
+	margin-left: -45%;
+}
+
+
+h1 {
+    font-family: 'Lato', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 100;
+    line-height: 46px;
+    font-size: 46px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 0px;
+    margin-right: 0px;
+    color: #555;
+/* 
+    width: 90%
+ */
+}
+
+h2 {
+    font-family: 'Lato', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 200;
+    line-height: 35px;
+    font-size: 35px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #555;
+    position: center;
+}
+
+p {
+    font-family: 'PT Sans Narrow', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 100;
+    line-height: 18px;
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #555;
+}
+
+.footer-p {
+	font-family: Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 100;
+    line-height: 14px;
+    font-size: 14px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #555;
+    display: inline;
+}
+
+.footer-p:hover {
+	color: #4682B4;
+}
+
+.choosingBox input[type=button] {
+    height: 50px;
+    width: 500px;
+    margin-top: 3px;
+    margin-bottom: 20px;
+    margin-left: 13px;
+    background: #FFDD00;
+    border: 1px solid #FFD700;
+    color: #FFFFFF;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 20px;
+}
+
+.choosingBox input[type=button]:hover{
+    outline: none !important;
+    border-width: 1px;
+    border-color: #FFFF00;
+    box-shadow: 0 0 10px #FFFF00;
+}
+
+.choosingBox input[type=button]:focus{
+    outline: none !important;
+    border-width: 1px;
+    border-color: #58D3F7;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+.logOut {
+	margin-right: 5px;
+}
+
+.logOut input[type=submit] {
+    height: 30px;
+    width: 70px;
+    background: #CEECF5;
+    border: 1px solid #CEECF5;
+    margin-top: 5px;
+}
+
+.logOut input[type=button] {
+    height: 30px;
+    width: 70px;
+    background: #CEECF5;
+    border: 1px solid #CEECF5;
+    margin-top: 5px;
+}
+
+.logOut input[type=submit]:focus{
+    outline: none !important;
+    border-width: 1px;
+    border-color: #58D3F7;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+.logOut input[type=button]:focus{
+    outline: none !important;
+    border-width: 1px;
+    border-color: #58D3F7;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+

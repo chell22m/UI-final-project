@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" class="ie6 ielt8"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7 ielt8"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
+    <head>
+    <link rel="stylesheet" href="style.css" />
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+            </script>
+        <script src="http://malsup.github.io/jquery.blockUI.js" type="text/javascript"></script>
+        <script>
+        
+            $(document).ready(function(){
+				var height = Math.max($(window).height(), $(document).height());
+				var width = Math.max($(window).width(), $(document).width());
+				$('#shadow').width(width);
+				$('#shadow').height(height);
+			
+				$(window).resize(function() {
+					var height = Math.max($(window).height(), $(document).height());
+					var width = Math.max($(window).width(), $(document).width());
+// 							console.log(height, width);
+
+					$('#shadow').width(width);
+					$('#shadow').height(height);
+// 					console.log($('#shadow').width(), + $('#shadow').height());
+				});
+            
+              $('#help').click(function() {
+                 $.blockUI.defaults.overlayCSS.cursor = 'default';
+                 $.blockUI.defaults.overlayCSS.opacity = 0.4;
+                 $.blockUI.defaults.css.top = $(window).height()*0.2;
+                 $.blockUI.defaults.css.left = ($(window).width()-500)/2;
+                 $.blockUI({
+                   blockMsgClass: 'alertBox',
+                           message: '<h2> Having trouble signing in?</h2> <p align="left"> <b> Instruction: </b> To login just use MHC user name and password. If you have forgotten your username or password please contact LITS! </p> <p align="left"> <br> For further information please contact: </p> <p align="left"> <b> Office of Residentail Services </b> <br> Ground level Safford Hall <br> Mount Holyoke College <br> 50 College Street <br> South Hadley, MA 01075 <br> Phone 413-538-2088 <br> <br> or email: <b> reslife@mtholyoke.edu </b> </p>'
+                 });
+                 $('.blockOverlay').click(function(){
+                     $.unblockUI(),
+                     $('#help').blur()
+                 })
+              });
+            });
+            </script>
+        <meta charset="utf-8">
+            <title>MHC Housing Lottery</title>
+            <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
+    <div class="shadow" id="shadow">
+    <body>
+        <div class="container">
+            <section id="content">
+                <form action="file://localhost/Users/monica_chelliah/Desktop/housingApp/index.html?#">
+                    <h1 align="center">Housing Lottery.</h1>
+                    <div align="center">
+                        <input type="text" placeholder="Username" required="" id="username" />
+                    </div>
+                    <div align="center">
+                        <input type="password" placeholder="Password" required="" id="password" />
+                    </div>
+                    <div align="center">
+                        <input type="submit" value="Sign in" />
+                        <input type="button" id="help" value="Help!" />
+                    </div>
+                </form><!-- form -->
+            </section><!-- content -->
+        </div><!-- container -->
+        <div class="fish">
+            <img border="0" src="./Login_files/Fish_Bowl.jpg" alt="FishBowl" width="400" height="370" align="center">
+        </div>
+    </body>
+    </div>
+</html>

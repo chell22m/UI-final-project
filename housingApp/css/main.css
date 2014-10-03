@@ -1,0 +1,11 @@
+/*CSS file for main home page of housing app*/
+
+.shadow {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	-webkit-box-shadow: inset 0px 0px 400px #D8D8D8;
+	box-shadow: inset 0px 0px 100px #D8D8D8;
+}
+
+
