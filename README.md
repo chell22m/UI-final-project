@@ -5,7 +5,8 @@ A website to run the MHC housing lottery electronically. This project concentrat
 
 Authors: Monica Chelliah, Phuong Vu, Liye Fu (Spring 2014)
 
-Credit: 
+Credit:
+
 http://davidlynch.org/projects/maphilight/docs/ - Maphighlight plugin
 
 http://qtip2.com/demos - qtip2 plugin
